@@ -1,6 +1,7 @@
 import vertexShader2dSource from './shaders/vertex-shader-2d.vert';
 import fragmentShader2dSource from './shaders/fragment-shader-2d.frag';
 import { createFragmentShader, createProgram, createVertexShader } from './gl';
+import { createPointArray, resizeCanvasToDisplaySize } from './utility';
 
 // Get the WebGL rendering context
 const canvas: HTMLCanvasElement = document.querySelector('#c');
@@ -14,15 +15,41 @@ const program = createProgram(gl, vertexShader, fragmentShader);
 // Look up the location of the attribute defined in the vertex shader
 const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
 
+const viewportSizeUniformLocation = gl.getUniformLocation(
+  program,
+  'ViewportSize'
+);
+
 // Create and bind a buffer to store data for the position attribute
 const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-// Three 2d points
-const positions = [0, 0, 0, 0.5, 0.7, 0];
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+// 12 2d points, representing 4 triangles
+const positions = createPointArray([
+  // first triangle
+  [0, 0],
+  [0.5, 1],
+  [1, 1],
+  // second triangle
+  [0, 0],
+  [0.5, -1],
+  [1, -1],
+  // third triangle
+  [0, 0],
+  [-0.5, -1],
+  [-1, -1],
+  // fourth triangle
+  [0, 0],
+  [-0.5, 1],
+  [-1, 1],
+]);
+
+gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
 const render = () => {
+  resizeCanvasToDisplaySize(canvas);
+  console.log({ width: gl.canvas.width, height: gl.canvas.height });
+
   // Set the viewport
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -33,11 +60,11 @@ const render = () => {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
 
+  // Set the ViewportSize uniform to the screen width and height, for funsies.
+  gl.uniform2f(viewportSizeUniformLocation, screen.width, screen.height);
+
   // Enable the position attribute
   gl.enableVertexAttribArray(positionAttributeLocation);
-
-  // Bind the position buffer.
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
   gl.vertexAttribPointer(
@@ -50,7 +77,9 @@ const render = () => {
   );
 
   // Draw enabled array
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.drawArrays(gl.TRIANGLES, 0, 12);
 };
 
 render();
+
+window.addEventListener('resize', () => render());
