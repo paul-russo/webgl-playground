@@ -1,8 +1,10 @@
 // fragment shaders don't have a default precision so we need to pick one. mediump is a good default
-precision mediump float;
+precision highp float;
 
 // uniform that the app will set to the current viewport size
 uniform vec2 ViewportSize;
+
+// uniform that the app will set to the number of seconds since time origin (page open)
 uniform float Time;
 
 void main() {
