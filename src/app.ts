@@ -3,6 +3,8 @@ import fragmentShader2dSource from './shaders/fragment-shader-2d.frag';
 import { createFragmentShader, createProgram, createVertexShader } from './gl';
 import { createPointArray, resizeCanvasToDisplaySize } from './utility';
 
+import './app.css';
+
 // Get the WebGL rendering context
 const canvas: HTMLCanvasElement = document.querySelector('#c');
 const gl = canvas.getContext('webgl');

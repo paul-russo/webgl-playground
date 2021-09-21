@@ -11,7 +11,7 @@ serve(
   {
     entryPoints: ['src/app.ts'],
     bundle: true,
-    outdir: 'www/js',
+    outdir: 'www/static',
     plugins: [
       glsl({
         minify: false,
