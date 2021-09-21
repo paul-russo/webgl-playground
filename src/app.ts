@@ -22,6 +22,8 @@ const viewportSizeUniformLocation = gl.getUniformLocation(
   'ViewportSize'
 );
 
+const timeUniformLocation = gl.getUniformLocation(program, 'Time');
+
 // Create and bind a buffer to store data for the position attribute
 const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -48,10 +50,7 @@ const positions = createPointArray([
 
 gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
-const render = () => {
-  resizeCanvasToDisplaySize(canvas);
-  console.log({ width: gl.canvas.width, height: gl.canvas.height });
-
+const render = (timestamp: number) => {
   // Set the viewport
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -64,6 +63,9 @@ const render = () => {
 
   // Set the ViewportSize uniform to the screen width and height, for funsies.
   gl.uniform2f(viewportSizeUniformLocation, screen.width, screen.height);
+
+  // Set the time index
+  gl.uniform1f(timeUniformLocation, timestamp / 1000);
 
   // Enable the position attribute
   gl.enableVertexAttribArray(positionAttributeLocation);
@@ -80,8 +82,13 @@ const render = () => {
 
   // Draw enabled array
   gl.drawArrays(gl.TRIANGLES, 0, 12);
+
+  requestAnimationFrame(render);
 };
 
-render();
+requestAnimationFrame(render);
 
-window.addEventListener('resize', () => render());
+window.addEventListener('resize', () => {
+  resizeCanvasToDisplaySize(canvas);
+  console.log({ width: gl.canvas.width, height: gl.canvas.height });
+});
