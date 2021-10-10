@@ -22,7 +22,7 @@ const viewportSizeUniformLocation = gl.getUniformLocation(
   'ViewportSize'
 );
 
-const timeUniformLocation = gl.getUniformLocation(program, 'Time');
+const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
 
 // Create and bind a buffer to store data for the position attribute
 const positionBuffer = gl.createBuffer();
@@ -86,6 +86,7 @@ const render = (timestamp: number) => {
   requestAnimationFrame(render);
 };
 
+resizeCanvasToDisplaySize(canvas);
 requestAnimationFrame(render);
 
 window.addEventListener('resize', () => {
