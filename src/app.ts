@@ -17,9 +17,9 @@ const program = createProgram(gl, vertexShader, fragmentShader);
 // Look up the location of the attribute defined in the vertex shader
 const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
 
-const viewportSizeUniformLocation = gl.getUniformLocation(
+const resolutionUniformLocation = gl.getUniformLocation(
   program,
-  'ViewportSize'
+  'u_resolution'
 );
 
 const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
@@ -31,21 +31,21 @@ gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 // 12 2d points, representing 4 triangles
 const positions = createPointArray([
   // first triangle
-  [0, 0],
-  [0.5, 1],
-  [1, 1],
+  [100, 100],
+  [150, 200],
+  [200, 200],
   // second triangle
-  [0, 0],
-  [0.5, -1],
-  [1, -1],
+  [100, 100],
+  [150, 0],
+  [200, 0],
   // third triangle
+  [100, 100],
+  [50, 0],
   [0, 0],
-  [-0.5, -1],
-  [-1, -1],
   // fourth triangle
-  [0, 0],
-  [-0.5, 1],
-  [-1, 1],
+  [100, 100],
+  [50, 200],
+  [0, 200],
 ]);
 
 gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
@@ -61,8 +61,12 @@ const render = (timestamp: number) => {
   // Tell it to use our program (pair of shaders)
   gl.useProgram(program);
 
-  // Set the ViewportSize uniform to the screen width and height, for funsies.
-  gl.uniform2f(viewportSizeUniformLocation, screen.width, screen.height);
+  // Set the uniform to the clientWidth and clientHeight of the canvas
+  gl.uniform2f(
+    resolutionUniformLocation,
+    canvas.clientWidth,
+    canvas.clientHeight
+  );
 
   // Set the time index
   gl.uniform1f(timeUniformLocation, timestamp / 1000);
