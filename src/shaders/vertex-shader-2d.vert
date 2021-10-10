@@ -23,7 +23,10 @@ void main() {
 
   // vec2 rotatedXY = rotate(vec2(clipPosition.x, clipPosition.y), u_time);
 
+  float offsetX = sin(u_time * 1.5 + (clipPosition.x + clipPosition.y)) * 0.8 + 1.0;
+  float offsetY = cos(u_time + (clipPosition.x + clipPosition.y)) * 0.8 - 1.0;
+
   // gl_Position is a special variable a vertex shader is responsible for setting
-  gl_Position = vec4(clipPosition.x + sin(u_time * 2.0) + 1.0, clipPosition.y + cos(u_time) - 1.0, 0, 1);
+  gl_Position = vec4(clipPosition.x + offsetX, clipPosition.y + offsetY, 0, 1);
   // gl_Position = vec4(clipPosition.x, clipPosition.y, 0, 1);
 }
