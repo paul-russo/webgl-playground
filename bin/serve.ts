@@ -18,4 +18,6 @@ serve(
       }),
     ],
   }
-);
+).then((result) => {
+  console.log(`Serving on port ${result.port}`);
+});
